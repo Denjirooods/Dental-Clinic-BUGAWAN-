@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analytics - MCVIL DENTAL CLINIC Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <img src="{{ url_for('static', filename='Logo.jpg') }}" alt="MCVIL DENTAL CLINIC" class="sidebar-logo">
+                </div>
+                <h1>MCVIL DENTAL CLINIC</h1>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">DISCOVER</div>
+                <a href="{{ url_for('dashboard') }}" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">INVENTORY</div>
+                <a href="{{ url_for('add_item') }}" class="nav-item">
+                    <i class="fas fa-plus"></i>
+                    Add Item
+                </a>
+                <a href="{{ url_for('inventory') }}" class="nav-item">
+                    <i class="fas fa-boxes"></i>
+                    Inventory Items
+                </a>
+                <a href="{{ url_for('categories') }}" class="nav-item">
+                    <i class="fas fa-tags"></i>
+                    Categories
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">REPORTS</div>
+                <a href="{{ url_for('transactions') }}" class="nav-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    Transactions
+                </a>
+                <a href="{{ url_for('reports') }}" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Reports
+                </a>
+                <a href="{{ url_for('analytics') }}" class="nav-item active">
+                    <i class="fas fa-chart-line"></i>
+                    Analytics
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">SETTINGS</div>
+                <a href="{{ url_for('logout') }}" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Advanced Analytics</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="refreshAnalytics()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success fade-in">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Analytics Overview -->
+            <div class="analytics-grid">
+                <div class="content-card fade-in">
+                    <div class="content-card-header">
+                        <div class="content-card-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Stock Distribution
+                        </div>
+                    </div>
+                    <div class="content-card-body">
+                        <canvas id="stockDistributionChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+
+                <div class="content-card fade-in">
+                    <div class="content-card-header">
+                        <div class="content-card-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Quantity Analysis
+                        </div>
+                    </div>
+                    <div class="content-card-body">
+                        <canvas id="quantityAnalysisChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Stock Distribution Chart using backend-provided counts
+            const stockCounts = {{ stock_counts | tojson }};
+            const stockData = {
+                labels: ['Well Stocked', 'Low Stock'],
+                datasets: [{
+                    data: [stockCounts.well || 0, stockCounts.low || 0],
+                    backgroundColor: ['#10b981', '#ef4444'],
+                    borderWidth: 0
+                }]
+            };
+            initializeChart('stockDistributionChart', 'doughnut', stockData);
+
+            // Quantity Analysis Chart (top items)
+            const quantityLabels = {{ quantity_labels | tojson }};
+            const quantityValues = {{ quantity_values | tojson }};
+            const quantityData = {
+                labels: quantityLabels,
+                datasets: [{
+                    label: 'Quantity',
+                    data: quantityValues,
+                    backgroundColor: '#6366f1'
+                }]
+            };
+            initializeChart('quantityAnalysisChart', 'bar', quantityData);
+        });
+
+        function refreshAnalytics() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Item - MCVIL DENTAL CLINIC Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <img src="{{ url_for('static', filename='Logo.jpg') }}" alt="MCVIL DENTAL CLINIC" class="sidebar-logo">
+                </div>
+                <h1>MCVIL DENTAL CLINIC</h1>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">DISCOVER</div>
+                <a href="{{ url_for('dashboard') }}" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">INVENTORY</div>
+                <a href="{{ url_for('add_item') }}" class="nav-item">
+                    <i class="fas fa-plus"></i>
+                    Add Item
+                </a>
+                <a href="{{ url_for('inventory') }}" class="nav-item">
+                    <i class="fas fa-boxes"></i>
+                    Inventory Items
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">SETTINGS</div>
+                <a href="{{ url_for('logout') }}" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Edit Item</h1>
+                <div class="header-actions">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+            
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success fade-in">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Form Container -->
+            <div class="form-container fade-in">
+                <div class="form-header">
+                    <div class="form-title">
+                        <i class="fas fa-edit"></i>
+                        Edit Item Information
+                    </div>
+                </div>
+                
+                <form method="POST" class="form-body">
+                    <div class="form-group">
+                        <label class="form-label">Item Name</label>
+                        <input type="text" name="name" class="form-control" value="{{ item[1] }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" name="quantity" class="form-control" min="0" value="{{ item[2] }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Minimum Stock Level</label>
+                        <input type="number" name="min_level" class="form-control" min="0" value="{{ item[3] }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Unit</label>
+                        <input type="text" name="unit" class="form-control" value="{{ item[4] }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select name="category_id" class="form-control" required>
+                            {% for category in categories %}
+                                <option value="{{ category[0] }}" {% if item[5] == category[0] %}selected{% endif %}>
+                                    {{ category[1] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Item
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="content-card fade-in" style="margin-top: 1.5rem;">
+                <div class="content-card-header">
+                    <div class="content-card-title">
+                        <i class="fas fa-bolt"></i>
+                        Quick Actions
+                    </div>
+                </div>
+                <div class="content-card-body">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <form method="POST" action="{{ url_for('decrement_item', item_id=item[0]) }}" style="display: inline;">
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <input type="number" name="decrement" value="1" min="1" max="{{ item[2] }}" 
+                                       style="width: 80px; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px;">
+                                <button type="submit" class="btn btn-danger btn-small">
+                                    <i class="fas fa-minus"></i> Reduce Stock
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <a href="{{ url_for('delete_item', item_id=item[0]) }}" 
+                           class="btn btn-danger btn-small" 
+                           onclick="return confirm('Are you sure you want to delete this item? This action cannot be undone.')">
+                            <i class="fas fa-trash"></i> Delete Item
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

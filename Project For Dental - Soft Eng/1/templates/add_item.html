@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Item - MCVIL DENTAL CLINIC Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <img src="{{ url_for('static', filename='Logo.jpg') }}" alt="MCVIL DENTAL CLINIC" class="sidebar-logo">
+                </div>
+                <h1>MCVIL DENTAL CLINIC</h1>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">DISCOVER</div>
+                <a href="{{ url_for('dashboard') }}" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">INVENTORY</div>
+                <a href="{{ url_for('add_item') }}" class="nav-item active">
+                    <i class="fas fa-plus"></i>
+                    Add Item
+                </a>
+                <a href="{{ url_for('inventory') }}" class="nav-item">
+                    <i class="fas fa-boxes"></i>
+                    Inventory Items
+                </a>
+                <a href="{{ url_for('categories') }}" class="nav-item">
+                    <i class="fas fa-tags"></i>
+                    Categories
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">REPORTS</div>
+                <a href="{{ url_for('transactions') }}" class="nav-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    Transactions
+                </a>
+                <a href="{{ url_for('reports') }}" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">SETTINGS</div>
+                <a href="{{ url_for('logout') }}" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Add New Item</h1>
+                <div class="header-actions">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+            
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success fade-in">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Form Container -->
+            <div class="form-container fade-in">
+                <div class="form-header">
+                    <div class="form-title">
+                        <i class="fas fa-plus-circle"></i>
+                        Item Information
+                    </div>
+                </div>
+                
+                <form method="POST" class="form-body">
+                    <div class="form-group">
+                        <label class="form-label">Item Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g., Disposable Gloves, Dental Syringes" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" name="quantity" class="form-control" min="0" placeholder="Current stock quantity" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Minimum Stock Level</label>
+                        <input type="number" name="min_level" class="form-control" min="0" placeholder="Alert when stock falls below this level" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Unit</label>
+                        <input type="text" name="unit" class="form-control" placeholder="e.g., pieces, boxes, bottles, packs" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select name="category_id" class="form-control" required>
+                            {% for category in categories %}
+                                <option value="{{ category[0] }}">{{ category[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Add Item
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

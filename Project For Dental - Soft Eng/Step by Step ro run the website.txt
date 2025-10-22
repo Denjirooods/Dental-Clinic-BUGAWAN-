@@ -1,0 +1,32 @@
+Step by Step how to run my Website using HTML/CSS and Database Sqlight backend of Python/Flask
+
+1. You need to have Sqlight and Python-(Version 3.13.7).
+
+2. Then after you download the the SQLight and python now proceed how to run.
+
+ 1. Click the FOLDER with the name (SYSTEM).
+ 2. Above of the folder click the Searchbar then type (PowerShell).
+
+3. Now if you already have the powershell 
+
+now type  (py -m pip install -r requirements.txt) after you type that, wait to install all requirements then after that type the (py app.py)
+
+then after that you see this 
+
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 531-765-220
+127.0.0.1 - - [29/Aug/2025 16:30:57] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [29/Aug/2025 16:30:57] "GET /dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [29/Aug/2025 16:30:57] "GET /static/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [29/Aug/2025 16:31:03] "GET /logout HTTP/1.1" 302 -
+127.0.0.1 - - [29/Aug/2025 16:31:03] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [29/Aug/2025 16:31:03] "GET /static/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [29/Aug/2025 16:31:03] "GET /static/Logo.jpg HTTP/1.1" 200 -
+
+Then you need to Copy this (http://127.0.0.1:5000)
+
+4. Now go to the Chrome and type this (http://127.0.0.1:5000)
+	
